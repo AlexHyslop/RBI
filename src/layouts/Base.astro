@@ -7,10 +7,12 @@ import { company } from '../data/site';
 interface Props {
   title: string;
   description: string;
+  /** Home page only: let the header sit over the full-bleed hero. */
+  overlayHeader?: boolean;
 }
 
-const { title, description } = Astro.props;
-const fullTitle = `${title} — ${company.shortName} ${company.legalName.includes('Kent') ? 'Kent' : ''}`.trim();
+const { title, description, overlayHeader = false } = Astro.props;
+const fullTitle = `${title} | RBI Kent`;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://rbi-kent.co.uk');
 ---
 
@@ -24,20 +26,22 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://rbi-kent.co
     <link rel="canonical" href={canonical.href} />
 
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content={company.legalName} />
+    <meta property="og:site_name" content={company.name} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical.href} />
+    <meta property="og:image" content={new URL('/photos/hero.jpg', canonical).href} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="theme-color" content="#15171a" />
+    <meta name="theme-color" content="#1d366c" />
 
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/icon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/icon.png" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap"
     />
 
     <script
@@ -45,31 +49,55 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://rbi-kent.co
       set:html={JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'GeneralContractor',
-        name: company.legalName,
-        alternateName: company.name,
+        name: company.name,
+        alternateName: company.tradingName,
+        description: company.tagline,
         url: 'https://rbi-kent.co.uk/',
         telephone: company.phone,
         email: company.email,
-        address: {
-          '@type': 'PostalAddress',
-          streetAddress: company.address.line1,
-          addressLocality: company.address.line2,
-          addressRegion: company.address.county,
-          postalCode: company.address.postcode,
-          addressCountry: 'GB',
-        },
-        areaServed: ['Kent', 'London', 'South East England'],
-        openingHours: 'Mo-Fr 07:30-17:30',
+        areaServed: company.area,
+        address: { '@type': 'PostalAddress', addressRegion: 'Kent', addressCountry: 'GB' },
       })}
     />
+
+    <script is:inline>
+      /* Flagged before paint so reveal animations never hide content
+         from a browser with JavaScript turned off. */
+      document.documentElement.classList.add('js');
+    </script>
   </head>
 
   <body>
     <a class="skip" href="#main">Skip to content</a>
-    <Header />
-    <main id="main">
+    <Header overlay={overlayHeader} />
+    <main id="main" class:list={[!overlayHeader && 'main--offset']}>
       <slot />
     </main>
     <Footer />
+
+    <script>
+      const targets = document.querySelectorAll('[data-reveal]');
+
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              entry.target.classList.add('is-in');
+              io.unobserve(entry.target);
+            }
+          },
+          { rootMargin: '0px 0px -12% 0px' },
+        );
+        targets.forEach((el) => io.observe(el));
+      } else {
+        targets.forEach((el) => el.classList.add('is-in'));
+      }
+    </script>
   </body>
 </html>
+
+<style>
+  /* Pages without a full-bleed hero start below the fixed header. */
+  .main--offset { padding-top: var(--header-h); }
+</style>

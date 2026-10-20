@@ -1,41 +1,41 @@
 /* ---------------------------------------------------------------
-   RBI — base stylesheet
-   Ink on paper. Hairline rules. One accent. No decoration that
-   isn't doing a job.
+   RB Interiors (Kent) — base stylesheet
+   Navy, grey and white. Big friendly geometric type, full-bleed
+   photography, generous whitespace.
 --------------------------------------------------------------- */
 
 :root {
-  --paper: #f3f1ec;
-  --paper-2: #e9e6df;
-  --ink: #15171a;
-  --ink-2: #3c4047;
-  --ink-3: #74787f;
-  --rule: #c9c5bc;
-  --rule-dark: #2c3034;
-  --accent: #a8401d;
-  --accent-ink: #8c3417;
+  --navy: #1d366c;
+  --navy-dark: #152950;
+  --navy-light: #2c4d93;
 
-  --sans: 'Archivo', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --ink: #2b2c2e;
+  --grey: #4f5052;
+  --grey-mid: #6e7073;
+  --grey-line: #d8d9da;
+  --off: #f4f4f4;
+  --white: #ffffff;
 
-  --gutter: clamp(1.25rem, 4vw, 3.5rem);
-  --measure: 62ch;
-  --page: 1420px;
+  --sans: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-  --step--1: clamp(0.8rem, 0.78rem + 0.1vw, 0.86rem);
-  --step-0: clamp(1rem, 0.97rem + 0.15vw, 1.08rem);
-  --step-1: clamp(1.18rem, 1.1rem + 0.4vw, 1.4rem);
-  --step-2: clamp(1.45rem, 1.3rem + 0.8vw, 2rem);
-  --step-3: clamp(1.9rem, 1.6rem + 1.5vw, 3rem);
-  --step-4: clamp(2.4rem, 1.8rem + 3.2vw, 5rem);
-  --step-5: clamp(3rem, 1.9rem + 5.4vw, 7.5rem);
+  --gutter: clamp(1.25rem, 5vw, 5rem);
+  --page: 1560px;
+  --header-h: 5.5rem;
+
+  --step--1: clamp(0.84rem, 0.82rem + 0.1vw, 0.92rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.12rem);
+  --step-1: clamp(1.15rem, 1.05rem + 0.5vw, 1.45rem);
+  --step-2: clamp(1.4rem, 1.2rem + 1vw, 2.15rem);
+  --step-3: clamp(1.8rem, 1.45rem + 1.75vw, 3.1rem);
+  --step-4: clamp(2.3rem, 1.6rem + 3.4vw, 4.6rem);
+  --step-5: clamp(2.6rem, 1.6rem + 4.6vw, 5.8rem);
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 *,
 *::before,
-*::after {
-  box-sizing: border-box;
-}
+*::after { box-sizing: border-box; }
 
 html {
   -webkit-text-size-adjust: 100%;
@@ -52,60 +52,50 @@ html {
 
 body {
   margin: 0;
-  background: var(--paper);
+  background: var(--white);
   color: var(--ink);
   font-family: var(--sans);
   font-size: var(--step-0);
-  font-weight: 400;
   line-height: 1.6;
-  font-synthesis-weight: none;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
+body[data-menu-open] { overflow: hidden; }
+
 h1, h2, h3, h4 {
   margin: 0;
-  font-weight: 600;
-  line-height: 1.04;
-  letter-spacing: -0.025em;
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
   text-wrap: balance;
 }
 
 h1 { font-size: var(--step-4); }
 h2 { font-size: var(--step-3); }
-h3 { font-size: var(--step-1); letter-spacing: -0.015em; line-height: 1.2; }
+h3 { font-size: var(--step-1); line-height: 1.25; }
 
 p { margin: 0 0 1em; }
 p:last-child { margin-bottom: 0; }
 
-a {
-  color: inherit;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.22em;
-  text-decoration-color: var(--rule);
-  transition: text-decoration-color 0.15s ease, color 0.15s ease;
-}
-a:hover { text-decoration-color: var(--accent); color: var(--accent-ink); }
+a { color: inherit; text-decoration: none; }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 3px solid var(--navy);
   outline-offset: 3px;
 }
 
-img, svg, video { display: block; max-width: 100%; height: auto; }
+.on-dark :focus-visible,
+.hero :focus-visible { outline-color: var(--white); }
 
-hr {
-  border: 0;
-  border-top: 1px solid var(--rule);
-  margin: 0;
-}
+img, svg, video { display: block; max-width: 100%; }
 
 ul, ol { margin: 0; padding: 0; }
 li { list-style: none; }
 
-::selection { background: var(--accent); color: var(--paper); }
+::selection { background: var(--navy); color: var(--white); }
 
-/* --- layout primitives ---------------------------------------- */
+/* --- layout --------------------------------------------------- */
 
 .wrap {
   width: 100%;
@@ -114,118 +104,87 @@ li { list-style: none; }
   padding-inline: var(--gutter);
 }
 
-.section {
-  padding-block: clamp(3.5rem, 7vw, 7.5rem);
-}
+.section { padding-block: clamp(3.5rem, 7vw, 7rem); }
+.section--tight { padding-block: clamp(2.5rem, 4.5vw, 4rem); }
+.section--grey { background: var(--grey); color: var(--white); }
+.section--off { background: var(--off); }
 
-.section--tight { padding-block: clamp(2.5rem, 4.5vw, 4.5rem); }
+/* --- type helpers --------------------------------------------- */
 
-.ruled { border-top: 1px solid var(--rule); }
-
-.lede {
-  font-size: var(--step-2);
-  line-height: 1.32;
-  letter-spacing: -0.02em;
-  font-weight: 400;
-  max-width: 34ch;
-}
-
-.prose { max-width: var(--measure); color: var(--ink-2); }
-.prose p + p { margin-top: 0; }
-
-/* --- the small mono label used all over the site --------------- */
-
-.label {
-  display: flex;
-  align-items: baseline;
-  gap: 0.75em;
-  font-family: var(--mono);
+.eyebrow {
   font-size: var(--step--1);
-  font-weight: 500;
-  letter-spacing: 0.14em;
+  font-weight: 700;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--navy);
+  margin-bottom: 1.25rem;
 }
 
-.label::before {
-  content: '';
-  width: 1.5rem;
-  height: 1px;
-  background: var(--accent);
-  translate: 0 -0.35em;
-  flex: none;
-}
+.section--grey .eyebrow { color: var(--white); opacity: 0.75; }
 
-.label--plain::before { display: none; }
-
-.num {
-  font-family: var(--mono);
-  font-size: var(--step--1);
+/* The Jenner device: opening clause in brand colour and bold, the
+   rest of the sentence running on in grey. */
+.statement {
+  font-size: var(--step-2);
   font-weight: 500;
-  letter-spacing: 0.08em;
-  color: var(--accent);
-  font-variant-numeric: tabular-nums;
+  line-height: 1.32;
+  letter-spacing: -0.015em;
+  color: var(--grey);
+  max-width: 26ch;
 }
+
+.statement strong {
+  color: var(--navy);
+  font-weight: 800;
+}
+
+.prose { color: var(--grey); max-width: 62ch; }
 
 /* --- buttons --------------------------------------------------- */
 
 .btn {
-  --btn-fg: var(--paper);
-  --btn-bg: var(--ink);
+  --btn-bg: var(--navy);
+  --btn-fg: var(--white);
+  --btn-bd: var(--navy);
   display: inline-flex;
   align-items: center;
-  gap: 0.7em;
-  padding: 0.9em 1.4em;
+  gap: 0.75em;
+  padding: 1.05em 2em;
   background: var(--btn-bg);
   color: var(--btn-fg);
-  border: 1px solid var(--btn-bg);
-  font-family: var(--mono);
+  border: 2px solid var(--btn-bd);
   font-size: var(--step--1);
-  font-weight: 500;
-  letter-spacing: 0.1em;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  text-decoration: none;
-  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+  cursor: pointer;
+  transition: background 0.25s var(--ease), color 0.25s var(--ease),
+    border-color 0.25s var(--ease);
 }
 
 .btn:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--paper);
-}
-
-.btn--ghost {
   --btn-bg: transparent;
-  --btn-fg: var(--ink);
-  border-color: var(--ink);
+  --btn-fg: var(--navy);
 }
 
-.btn--invert {
-  --btn-bg: var(--paper);
-  --btn-fg: var(--ink);
+.btn--light {
+  --btn-bg: var(--white);
+  --btn-fg: var(--navy);
+  --btn-bd: var(--white);
 }
+.btn--light:hover { --btn-bg: transparent; --btn-fg: var(--white); }
 
-.btn__arrow { transition: translate 0.18s ease; }
-.btn:hover .btn__arrow { translate: 0.25em 0; }
-
-/* --- utilities ------------------------------------------------- */
-
-.ink-panel {
-  background: var(--ink);
-  color: var(--paper);
-  --rule: var(--rule-dark);
-  --ink-3: #8d9298;
-  --ink-2: #b9bdc2;
+.btn--outline-light {
+  --btn-bg: transparent;
+  --btn-fg: var(--white);
+  --btn-bd: var(--white);
 }
+.btn--outline-light:hover { --btn-bg: var(--white); --btn-fg: var(--navy); }
 
-.hatch {
-  background-color: var(--paper-2);
-  background-image: repeating-linear-gradient(
-    -45deg,
-    transparent 0 7px,
-    rgba(21, 23, 26, 0.07) 7px 8px
-  );
-}
+.btn__arrow { transition: translate 0.25s var(--ease); }
+.btn:hover .btn__arrow { translate: 0.3em 0; }
+
+/* --- misc ------------------------------------------------------ */
 
 .skip {
   position: absolute;
@@ -234,9 +193,30 @@ li { list-style: none; }
 .skip:focus {
   left: 1rem;
   top: 1rem;
-  z-index: 100;
-  padding: 0.75rem 1rem;
-  background: var(--ink);
-  color: var(--paper);
-  text-decoration: none;
+  z-index: 200;
+  padding: 0.85rem 1.25rem;
+  background: var(--navy);
+  color: var(--white);
+  font-weight: 700;
+}
+
+/* Fades a block in the first time it scrolls into view. Opt in with
+   [data-reveal]; without JS everything simply stays visible. */
+[data-reveal] {
+  opacity: 1;
+}
+
+.js [data-reveal] {
+  opacity: 0;
+  translate: 0 1.75rem;
+  transition: opacity 0.7s var(--ease), translate 0.7s var(--ease);
+}
+
+.js [data-reveal].is-in {
+  opacity: 1;
+  translate: 0 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] { opacity: 1; translate: none; }
 }

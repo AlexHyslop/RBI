@@ -1,206 +1,315 @@
 ---
-import Logo from './Logo.astro';
 import { company, nav } from '../data/site';
 
-const path = Astro.url.pathname;
-const isCurrent = (href: string) => path === href || path === href.replace(/\/$/, '');
+interface Props {
+  /** Sit transparently over a full-bleed hero instead of on a white bar. */
+  overlay?: boolean;
+}
+
+const { overlay = false } = Astro.props;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isCurrent = (href: string) => (href.replace(/\/$/, '') || '/') === path;
 ---
 
-<header class="site-head">
-  <div class="wrap site-head__inner">
-    <a href="/" class="site-head__brand" aria-label={`${company.name} — home`}>
-      <Logo class="site-head__logo" />
+<header class="head" data-overlay={overlay ? '' : undefined} data-head>
+  <div class="head__bar">
+    <a href="/" class="head__brand" aria-label={`${company.name} — home`}>
+      <img
+        class="head__logo head__logo--navy"
+        src="/logo.png"
+        alt={company.name}
+        width="881"
+        height="193"
+      />
+      <img
+        class="head__logo head__logo--white"
+        src="/logo-white.png"
+        alt=""
+        aria-hidden="true"
+        width="881"
+        height="193"
+      />
     </a>
 
-    <button
-      class="site-head__toggle"
-      type="button"
-      aria-expanded="false"
-      aria-controls="site-nav"
-      data-nav-toggle
-    >
-      <span class="site-head__toggle-label">Menu</span>
-      <span class="site-head__bars" aria-hidden="true"><i></i><i></i></span>
-    </button>
+    <div class="head__right">
+      <a class="head__tel" href={company.phoneHref}>{company.phone}</a>
+      <button
+        class="burger"
+        type="button"
+        aria-expanded="false"
+        aria-controls="menu"
+        aria-label="Open menu"
+        data-burger
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
 
-    <nav class="site-nav" id="site-nav" aria-label="Primary">
-      <ul class="site-nav__list">
-        {nav.map((item) => (
-          <li>
-            <a
-              href={item.href}
-              class="site-nav__link"
-              aria-current={isCurrent(item.href) ? 'page' : undefined}
-            >{item.label}</a>
+  <div class="menu" id="menu" hidden data-menu>
+    <nav class="menu__inner wrap" aria-label="Primary">
+      <ul class="menu__list">
+        {nav.map((item, i) => (
+          <li style={`--i: ${i}`}>
+            <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+              <span class="menu__num">{String(i + 1).padStart(2, '0')}</span>
+              {item.label}
+            </a>
           </li>
         ))}
       </ul>
-      <a class="site-head__phone" href={company.phoneHref}>
-        <span class="site-head__phone-label">Call</span>
-        <span class="site-head__phone-num">{company.phone}</span>
-      </a>
+
+      <div class="menu__foot" style={`--i: ${nav.length}`}>
+        <p class="menu__label">Get in touch</p>
+        <a class="menu__contact" href={company.phoneHref}>{company.phone}</a>
+        <a class="menu__contact" href={`mailto:${company.email}`}>{company.email}</a>
+        <p class="menu__area">{company.area}</p>
+      </div>
     </nav>
   </div>
 </header>
 
 <style>
-  .site-head {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    background: color-mix(in srgb, var(--paper) 92%, transparent);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--rule);
+  .head {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 100;
   }
 
-  .site-head__inner {
+  .head__bar {
+    /* Kept above the overlay panel so the close button stays reachable. */
+    position: relative;
+    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1.5rem;
-    min-height: 4.75rem;
+    min-height: var(--header-h);
+    padding-inline: var(--gutter);
+    background: var(--white);
+    box-shadow: 0 1px 0 var(--grey-line);
+    transition: background 0.3s var(--ease), box-shadow 0.3s var(--ease);
   }
 
-  .site-head__brand {
-    text-decoration: none;
-    display: block;
-    flex: none;
+  /* Over a hero, or over the open menu: no bar, white logo. */
+  .head[data-overlay]:not([data-stuck]) .head__bar,
+  .head[data-menu-open] .head__bar {
+    background: transparent;
+    box-shadow: none;
   }
 
-  .site-head__logo {
-    width: 136px;
+  .head__brand { display: block; flex: none; position: relative; }
+
+  .head__logo {
+    width: clamp(150px, 17vw, 230px);
     height: auto;
-    color: var(--ink);
+    transition: opacity 0.3s var(--ease);
   }
 
-  .site-head__toggle {
-    display: none;
+  .head__logo--white {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+
+  .head[data-overlay]:not([data-stuck]) .head__logo--navy,
+  .head[data-menu-open] .head__logo--navy { opacity: 0; }
+
+  .head[data-overlay]:not([data-stuck]) .head__logo--white,
+  .head[data-menu-open] .head__logo--white { opacity: 1; }
+
+  .head__right {
+    display: flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: clamp(1rem, 2.5vw, 2.25rem);
+  }
+
+  .head__tel {
+    font-weight: 700;
+    font-size: var(--step-0);
+    color: var(--navy);
+    transition: color 0.3s var(--ease);
+    white-space: nowrap;
+  }
+  .head__tel:hover { color: var(--navy-light); }
+
+  .head[data-overlay]:not([data-stuck]) .head__tel,
+  .head[data-menu-open] .head__tel { color: var(--white); }
+
+  @media (max-width: 34rem) { .head__tel { display: none; } }
+
+  /* burger ----------------------------------------------------- */
+
+  .burger {
+    display: grid;
+    gap: 6px;
+    width: 34px;
+    padding: 6px 0;
     background: none;
-    border: 1px solid var(--rule);
-    padding: 0.5rem 0.75rem;
-    font-family: var(--mono);
-    font-size: var(--step--1);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ink);
+    border: 0;
     cursor: pointer;
   }
 
-  .site-head__bars {
-    display: grid;
-    gap: 4px;
-    width: 15px;
-  }
-  .site-head__bars i {
+  .burger span {
     display: block;
-    height: 1.5px;
-    background: var(--ink);
-    transition: translate 0.2s ease, rotate 0.2s ease;
-  }
-  [aria-expanded='true'] .site-head__bars i:first-child { translate: 0 2.75px; rotate: 45deg; }
-  [aria-expanded='true'] .site-head__bars i:last-child { translate: 0 -2.75px; rotate: -45deg; }
-
-  .site-nav {
-    display: flex;
-    align-items: center;
-    gap: clamp(1.25rem, 3vw, 2.75rem);
+    height: 2.5px;
+    background: var(--navy);
+    transition: background 0.3s var(--ease), translate 0.3s var(--ease),
+      rotate 0.3s var(--ease), opacity 0.2s var(--ease);
   }
 
-  .site-nav__list {
-    display: flex;
-    gap: clamp(1rem, 2.2vw, 2.25rem);
-  }
+  .head[data-overlay]:not([data-stuck]) .burger span,
+  .head[data-menu-open] .burger span { background: var(--white); }
 
-  .site-nav__link {
-    font-family: var(--mono);
-    font-size: var(--step--1);
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: var(--ink-2);
-    padding-block: 0.35rem;
-    border-bottom: 1.5px solid transparent;
-    white-space: nowrap;
-  }
+  .burger[aria-expanded='true'] span { background: var(--white); }
+  .burger[aria-expanded='true'] span:nth-child(1) { translate: 0 8.5px; rotate: 45deg; }
+  .burger[aria-expanded='true'] span:nth-child(2) { opacity: 0; }
+  .burger[aria-expanded='true'] span:nth-child(3) { translate: 0 -8.5px; rotate: -45deg; }
 
-  .site-nav__link:hover { color: var(--ink); border-bottom-color: var(--accent); }
-  .site-nav__link[aria-current='page'] { color: var(--ink); border-bottom-color: var(--ink); }
+  /* overlay menu ----------------------------------------------- */
 
-  .site-head__phone {
+  .menu {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background: var(--navy);
+    color: var(--white);
     display: grid;
-    text-decoration: none;
-    padding-left: clamp(1rem, 2vw, 2rem);
-    border-left: 1px solid var(--rule);
+    align-items: center;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s var(--ease), visibility 0.4s var(--ease);
   }
 
-  .site-head__phone-label {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.16em;
+  .menu[hidden] { display: grid; }
+
+  .menu[data-open] { opacity: 1; visibility: visible; }
+
+  .menu__inner {
+    display: grid;
+    gap: clamp(2.5rem, 6vw, 5rem);
+    padding-block: calc(var(--header-h) + 2rem) 3rem;
+  }
+
+  @media (min-width: 60rem) {
+    .menu__inner {
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      align-items: center;
+    }
+  }
+
+  .menu__list li,
+  .menu__foot {
+    opacity: 0;
+    translate: 0 1.5rem;
+    transition: opacity 0.45s var(--ease), translate 0.45s var(--ease);
+    transition-delay: calc(var(--i) * 70ms + 120ms);
+  }
+
+  .menu[data-open] .menu__list li,
+  .menu[data-open] .menu__foot { opacity: 1; translate: 0 0; }
+
+  .menu__list a {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding-block: clamp(0.5rem, 1.2vw, 0.9rem);
+    font-size: var(--step-4);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    transition: color 0.2s var(--ease), translate 0.25s var(--ease);
+  }
+
+  .menu__list a:hover { color: #9db4e0; translate: 0.5rem 0; }
+  .menu__list a[aria-current='page'] { color: #9db4e0; }
+
+  .menu__num {
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    opacity: 0.5;
+  }
+
+  .menu__foot {
+    display: grid;
+    justify-items: start;
+    gap: 0.4rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  @media (min-width: 60rem) {
+    .menu__foot {
+      border-top: 0;
+      border-left: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 0.5rem 0 0.5rem clamp(2rem, 4vw, 4rem);
+    }
+  }
+
+  .menu__label {
+    margin: 0 0 0.5rem;
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--ink-3);
+    opacity: 0.6;
   }
 
-  .site-head__phone-num {
-    font-size: var(--step-0);
-    font-weight: 600;
+  .menu__contact {
+    font-size: var(--step-1);
+    font-weight: 700;
     letter-spacing: -0.01em;
-    white-space: nowrap;
   }
-  .site-head__phone:hover .site-head__phone-num { color: var(--accent-ink); }
+  .menu__contact:hover { color: #9db4e0; }
 
-  @media (max-width: 62rem) {
-    .site-head__toggle { display: inline-flex; }
-
-    .site-nav {
-      position: absolute;
-      inset: 100% 0 auto;
-      display: grid;
-      gap: 0;
-      align-items: stretch;
-      background: var(--paper);
-      border-bottom: 1px solid var(--rule);
-      padding: 0 var(--gutter) 1.5rem;
-      box-shadow: 0 18px 40px -28px rgba(21, 23, 26, 0.5);
-    }
-
-    .site-nav:not([data-open]) { display: none; }
-
-    .site-nav__list { display: grid; }
-
-    .site-nav__link {
-      display: block;
-      padding-block: 1rem;
-      border-bottom: 1px solid var(--rule);
-      font-size: var(--step-0);
-    }
-    .site-nav__link[aria-current='page'] { border-bottom-color: var(--accent); }
-
-    .site-head__phone {
-      padding: 1.25rem 0 0;
-      border-left: 0;
-    }
+  .menu__area {
+    margin: 1rem 0 0;
+    font-size: var(--step--1);
+    opacity: 0.6;
   }
 </style>
 
 <script>
-  const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
-  const panel = document.getElementById('site-nav');
+  const head = document.querySelector<HTMLElement>('[data-head]');
+  const burger = document.querySelector<HTMLButtonElement>('[data-burger]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
 
-  if (toggle && panel) {
-    toggle.addEventListener('click', () => {
-      const open = panel.hasAttribute('data-open');
-      panel.toggleAttribute('data-open', !open);
-      toggle.setAttribute('aria-expanded', String(!open));
+  /* Swap the transparent hero header for the solid bar once the page
+     has moved past the first slice of the hero. */
+  if (head) {
+    const onScroll = () => {
+      head.toggleAttribute('data-stuck', window.scrollY > 40);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  if (burger && menu) {
+    const setOpen = (open: boolean) => {
+      menu.toggleAttribute('data-open', open);
+      burger.setAttribute('aria-expanded', String(open));
+      burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      document.body.toggleAttribute('data-menu-open', open);
+      head?.toggleAttribute('data-menu-open', open);
+      if (open) menu.removeAttribute('hidden');
+    };
+
+    burger.addEventListener('click', () =>
+      setOpen(!menu.hasAttribute('data-open')),
+    );
+
+    menu.addEventListener('click', (event) => {
+      if ((event.target as HTMLElement).closest('a')) setOpen(false);
     });
 
-    panel.addEventListener('click', (event) => {
-      if ((event.target as HTMLElement).closest('a')) {
-        panel.removeAttribute('data-open');
-        toggle.setAttribute('aria-expanded', 'false');
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && menu.hasAttribute('data-open')) {
+        setOpen(false);
+        burger.focus();
       }
     });
   }

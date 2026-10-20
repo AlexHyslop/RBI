@@ -1,0 +1,109 @@
+---
+import { company } from '../data/site';
+
+/**
+ * Set this to a POST endpoint (Formspree, a Vercel function, a CRM webhook)
+ * to have enquiries delivered server-side. While it is empty the form composes
+ * the message in the visitor's own mail client instead, so nothing is lost.
+ */
+const FORM_ENDPOINT = '';
+---
+
+<form
+  class="form"
+  method="post"
+  action={FORM_ENDPOINT || undefined}
+  data-fallback-email={FORM_ENDPOINT ? undefined : company.email}
+>
+  <p class="field">
+    <label for="name">Name</label>
+    <input id="name" name="name" type="text" required autocomplete="name" />
+  </p>
+  <p class="field">
+    <label for="email">Email Address</label>
+    <input id="email" name="email" type="email" required autocomplete="email" />
+  </p>
+  <p class="field">
+    <label for="phone">Telephone <span>(optional)</span></label>
+    <input id="phone" name="telephone" type="tel" autocomplete="tel" />
+  </p>
+  <p class="field">
+    <label for="message">Message</label>
+    <textarea
+      id="message"
+      name="message"
+      rows="6"
+      required
+      placeholder="Where the building is, what needs doing, and any dates that are fixed."></textarea>
+  </p>
+  <button class="btn" type="submit">
+    Send Message <span class="btn__arrow" aria-hidden="true">→</span>
+  </button>
+</form>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('form[data-fallback-email]');
+  const to = form?.dataset.fallbackEmail;
+
+  if (form && to) {
+    form.addEventListener('submit', (event) => {
+      if (!form.reportValidity()) return;
+      event.preventDefault();
+
+      const data = new FormData(form);
+      const body = [...data.entries()]
+        .filter(([, value]) => String(value).trim() !== '')
+        .map(([key, value]) => `${key[0].toUpperCase()}${key.slice(1)}: ${value}`)
+        .join('\n\n');
+
+      window.location.href = `mailto:${to}?subject=${encodeURIComponent(
+        'Website enquiry',
+      )}&body=${encodeURIComponent(body)}`;
+    });
+  }
+</script>
+
+<style>
+  .form { display: grid; gap: 1.5rem; justify-items: start; }
+
+  .field { margin: 0; display: grid; gap: 0.5rem; width: 100%; }
+
+  .field label {
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .field label span { opacity: 0.6; font-weight: 500; }
+
+  .field input,
+  .field textarea {
+    width: 100%;
+    padding: 0.95rem 1.1rem;
+    background: var(--white);
+    border: 2px solid var(--grey-line);
+    border-radius: 0;
+    font-family: var(--sans);
+    font-size: var(--step-0);
+    color: var(--ink);
+    transition: border-color 0.2s var(--ease);
+  }
+
+  .field textarea { resize: vertical; line-height: 1.55; }
+
+  .field input:hover,
+  .field textarea:hover { border-color: var(--grey-mid); }
+
+  .field input:focus,
+  .field textarea:focus { outline: none; border-color: var(--navy); }
+
+  .field ::placeholder { color: var(--grey-mid); opacity: 1; }
+
+  /* On the grey band the labels invert but the inputs stay white. */
+  :global(.section--grey) .field label { color: var(--white); }
+  :global(.section--grey) .field input,
+  :global(.section--grey) .field textarea { border-color: transparent; }
+  :global(.section--grey) .btn { --btn-bg: var(--white); --btn-fg: var(--navy); --btn-bd: var(--white); }
+  :global(.section--grey) .btn:hover { --btn-bg: transparent; --btn-fg: var(--white); }
+</style>

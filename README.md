@@ -1,12 +1,12 @@
 # RBI — rbi-kent.co.uk
 
-Website for **RB Interiors (Kent) Limited**, a building and interior contractor
-based in Kemsley, Sittingbourne. Built with [Astro](https://astro.build),
-statically generated, deployed on Vercel from `main`.
+Website for **RB Interiors (Kent) Limited**, building and refurbishment
+contractors covering the South East. Astro, statically generated, deployed on
+Vercel from `main`.
 
 ## Running it
 
-Requires Node 22.22+ (see `.nvmrc` — Node 24 is what this was built against).
+Requires Node 22.22+ (see `.nvmrc` — built against Node 24).
 
 ```bash
 npm install
@@ -15,53 +15,73 @@ npm run build    # static output into dist/
 npm run preview  # serve the built output
 ```
 
+## Pages
+
+`/` · `/our-services/` · `/contact-us/` — the same three the previous site had,
+at the same URLs, so existing links and search results still land.
+
 ## Where things live
 
 ```
 src/
-  data/site.ts        every piece of copy that repeats: company details,
-                      nav, services, sectors, process. Edit here first.
-  layouts/Base.astro  <head>, fonts, JSON-LD, header + footer
-  components/         Header, Footer, Logo, Figure, PageHero, CallToAction
-  pages/              one file per route
-  styles/global.css   design tokens, type scale, shared primitives
-public/               favicon, robots.txt, and photographs when they arrive
+  data/site.ts          company details, nav, the eight services, the four
+                        sectors. Nearly every content edit happens here.
+  layouts/Base.astro    <head>, fonts, JSON-LD, header + footer, scroll reveals
+  components/           Header (overlay menu), Footer, PageBanner,
+                        SectorTiles, ContactForm
+  pages/                one file per route
+  styles/global.css     design tokens, type scale, buttons, shared helpers
+public/
+  logo.png              navy lockup, transparent
+  logo-white.png        white lockup for navy and photographic backgrounds
+  icon.png              favicon, cut from the house mark
+  photos/               hero, sector tiles, service photos, the mono band
 ```
 
-### Editing content
+Adding a service to `src/data/site.ts` adds it to the homepage grid, the
+services page and the footer at once.
 
-Most changes are a one-line edit in `src/data/site.ts`. Adding a service there
-adds it to the homepage list, the services page and the footer at once.
+## Design
 
-### Photographs
+Modelled on [jenner-group.co.uk](https://jenner-group.co.uk): full-bleed
+photography, burger-only navigation over a full-screen overlay, a lead
+statement whose opening clause picks up the brand colour, washed-back image
+tiles that resolve on hover, a mono band, and a grey footer carrying a bold
+statement plus quick links. The hero is a full-bleed photograph with the name,
+strapline and buttons overlaid on it.
 
-The site is built photo-ready but ships without them. `Figure.astro` renders a
-hatched plate with its caption where an image will go; drop files into
-`public/photos/` and pass `src` to turn a plate into a real photograph:
+Colour comes from the logo: navy `#1D366C` with grey `#4F5052` and white.
+Type is Figtree throughout.
 
-```astro
-<Figure src="/photos/medway-washrooms.jpg" alt="…" caption="Fig. 01 — …" />
-```
+## The contact form
 
-### The contact form
+`FORM_ENDPOINT` in `src/components/ContactForm.astro` is empty, so the form
+composes the message in the visitor's own mail client and nothing is lost. Set
+it to a POST endpoint (Formspree, a Vercel function, a CRM webhook) for
+server-side delivery.
 
-`src/pages/contact.astro` has a `FORM_ENDPOINT` constant. While it is empty the
-form composes an email in the visitor's own mail client, so enquiries are not
-lost. Set it to a POST endpoint (Formspree, a Vercel function, a CRM webhook)
-for server-side delivery.
+## Photography — replace this
 
-## Design notes
+**Every photograph on the site is stock and needs swapping for RBI's own
+work.** They are from [Pexels](https://www.pexels.com) under the Pexels licence
+(free to use, no attribution required), resized and compressed in
+`public/photos/`. They are there so the layout can be judged, not because they
+show RBI jobs. Replace the files in place, keeping the same names and roughly
+the same aspect ratios, and nothing else needs touching:
 
-Ink on paper, hairline rules, one accent (`--accent`, a burnt brick red), and a
-mono face for labels and numbers. No gradients, no drop shadows, no rounded
-corners — the look is meant to read as a drawing set, not a template. Tokens
-all live at the top of `src/styles/global.css`.
+| File | Used for | Aspect |
+| --- | --- | --- |
+| `hero.jpg` | homepage hero | 16:9, wide |
+| `residential/commercial/educational/industrial.jpg` | sector tiles | 4:3 |
+| `decorating/refurbishment/bathrooms/partitioning.jpg` | service sections | 3:2 |
+| `band.jpg` | full-width mono band | 21:9, greyscale |
 
-## Content caveat
+## Content provenance
 
-The original rbi-kent.co.uk is offline (the domain resolves to an unconfigured
-host) and the Wayback Machine only holds a GoDaddy parking page, so none of the
-previous site's copy was recoverable. The structure and service list here are
-reconstructed from search-engine records of the old site plus the Companies
-House entry (no. 08002496). **The copy, phone number, email address and the
-testimonial need checking by the client before this goes live.**
+The live site is down and only its **home page** survives in the Wayback
+Machine, captured 27 February 2025. The services, the strapline, "We've Been in
+Business For Over 20 years", the phone number, the email address and the
+South East England coverage all come from that capture. `/our-services/` and
+`/contact-us/` were never archived, so the body copy on those pages — and the
+longer descriptions under each service — is newly written and **needs Richard's
+sign-off before go-live.**
