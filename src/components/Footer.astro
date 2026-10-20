@@ -1,0 +1,153 @@
+---
+import Logo from './Logo.astro';
+import { company, nav } from '../data/site';
+import { services } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="foot ink-panel">
+  <div class="wrap">
+    <div class="foot__top">
+      <div class="foot__pitch">
+        <Logo class="foot__logo" />
+        <p class="foot__line">
+          Building and interior contractors working across Kent, London and the
+          wider South East. Seven trades, one contract, one number to call.
+        </p>
+        <a class="btn btn--invert" href="/contact/">
+          Start a conversation <span class="btn__arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <nav class="foot__cols" aria-label="Footer">
+        <div class="foot__col">
+          <h2 class="foot__head">Services</h2>
+          <ul>
+            {services.map((s) => (
+              <li><a href={`/services/#${s.slug}`}>{s.title}</a></li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="foot__col">
+          <h2 class="foot__head">Company</h2>
+          <ul>
+            {nav.map((item) => (
+              <li><a href={item.href}>{item.label}</a></li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="foot__col">
+          <h2 class="foot__head">Office</h2>
+          <address class="foot__address">
+            {company.address.line1}<br />
+            {company.address.line2}<br />
+            {company.address.county} {company.address.postcode}
+          </address>
+          <ul>
+            <li><a href={company.phoneHref}>{company.phone}</a></li>
+            <li><a href={`mailto:${company.email}`}>{company.email}</a></li>
+          </ul>
+          <p class="foot__hours">{company.hours}</p>
+        </div>
+      </nav>
+    </div>
+
+    <div class="foot__bottom">
+      <p>© {year} {company.legalName}</p>
+      <p>Registered in England &amp; Wales, no. {company.companyNumber}</p>
+      <p class="foot__vat">Fully insured · CSCS-carded teams</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .foot {
+    padding-block: clamp(3rem, 6vw, 5.5rem) 2rem;
+  }
+
+  .foot__top {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 5rem);
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @media (min-width: 60rem) {
+    .foot__top { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr); }
+  }
+
+  .foot__logo { width: 152px; color: var(--paper); }
+
+  .foot__line {
+    margin: 1.75rem 0 2rem;
+    max-width: 34ch;
+    color: var(--ink-2);
+    font-size: var(--step-1);
+    line-height: 1.4;
+    letter-spacing: -0.015em;
+  }
+
+  .foot__cols {
+    display: grid;
+    gap: 2.5rem clamp(1.5rem, 3vw, 3rem);
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  }
+
+  .foot__head {
+    font-family: var(--mono);
+    font-size: var(--step--1);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding-bottom: 0.9rem;
+    margin-bottom: 1.1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .foot__col ul { display: grid; gap: 0.6rem; }
+
+  .foot__col a {
+    text-decoration: none;
+    color: var(--ink-2);
+    font-size: var(--step--1);
+  }
+  .foot__col a:hover { color: var(--paper); }
+
+  .foot__address {
+    font-style: normal;
+    font-size: var(--step--1);
+    color: var(--ink-2);
+    margin-bottom: 1rem;
+    line-height: 1.7;
+  }
+
+  .foot__hours {
+    margin-top: 1rem;
+    font-size: var(--step--1);
+    color: var(--ink-3);
+  }
+
+  .foot__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    margin-top: clamp(3rem, 6vw, 5rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .foot__bottom p { margin: 0; }
+  .foot__vat { margin-left: auto !important; }
+
+  @media (max-width: 48rem) {
+    .foot__vat { margin-left: 0 !important; }
+  }
+</style>

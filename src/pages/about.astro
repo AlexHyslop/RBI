@@ -1,0 +1,134 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import CallToAction from '../components/CallToAction.astro';
+import Figure from '../components/Figure.astro';
+import { company } from '../data/site';
+
+const record = [
+  ['Registered name', company.legalName],
+  ['Company number', company.companyNumber],
+  ['Incorporated', '2012'],
+  ['Registered office', `${company.address.line1}, ${company.address.line2}, ${company.address.county} ${company.address.postcode}`],
+  ['Principal activity', 'Development of building projects'],
+  ['Insurance', 'Public and employers liability — certificates on request'],
+];
+---
+
+<Base
+  title="About"
+  description="RB Interiors (Kent) Limited is a building and interior contractor based in Kemsley, Sittingbourne, working across Kent, London and the South East since 2012."
+>
+  <PageHero
+    eyebrow="About"
+    title="A Kent contractor, not a national one."
+    lede="Seven trades, one yard in Kemsley, and a radius we can actually service. Small enough that the person who quoted the job is the person who answers the phone about it."
+  />
+
+  <section class="section">
+    <div class="wrap about">
+      <div class="about__text prose">
+        <p class="lede">
+          The company was incorporated in 2012. The trade behind it goes back
+          considerably further.
+        </p>
+        <p>
+          RB Interiors started as a fit-out and finishes contractor working for
+          main contractors in Kent and South London. Over time, clients started
+          coming direct — mostly because they wanted one party accountable for
+          the whole job rather than four subcontractors pointing at each other.
+          So the trades were brought in-house, one at a time, until the list
+          covered most of what a refurbishment actually needs.
+        </p>
+        <p>
+          That is where it has stayed. We are not trying to be a national
+          contractor. The yard is in Kemsley, the teams live locally, and the
+          work is within reach of both. It means we can get a van to a site the
+          same morning if something has gone wrong, which is a more useful
+          promise than a glossy brochure.
+        </p>
+        <p>
+          The clients are a mix: academy trusts and schools, managing agents and
+          landlords, operations managers at industrial sites, and private
+          homeowners doing one big job once. The common thread is a building
+          that has to be back in use by a particular date.
+        </p>
+      </div>
+
+      <aside class="about__aside">
+        <Figure
+          caption="Fig. 06 — The yard at Kemsley. Photograph to be supplied."
+          ratio="4 / 5"
+        />
+      </aside>
+    </div>
+  </section>
+
+  <section class="section ruled">
+    <div class="wrap">
+      <div class="rec__head">
+        <p class="label">On the record</p>
+        <h2 class="rec__title">Company details, in full.</h2>
+      </div>
+      <dl class="rec">
+        {record.map(([k, v]) => (
+          <div class="rec__row">
+            <dt>{k}</dt>
+            <dd>{v}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <CallToAction
+    heading="Want to talk to someone who has done this before?"
+    copy="Call the office and you will get a person who has been on site, not a call handler reading a script. If we are not the right firm for your job, we will usually know within five minutes and tell you."
+  />
+</Base>
+
+<style>
+  .about { display: grid; gap: clamp(2.5rem, 5vw, 4.5rem); align-items: start; }
+
+  @media (min-width: 64rem) {
+    .about { grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.85fr); }
+  }
+
+  .about__text .lede { margin-bottom: 2rem; }
+  .about__text p + p { margin-top: 1.1em; }
+
+  .rec__head {
+    display: grid;
+    gap: 1.25rem;
+    margin-bottom: clamp(1.75rem, 3vw, 2.75rem);
+  }
+
+  .rec__title { font-size: var(--step-3); }
+
+  .rec { margin: 0; border-top: 1px solid var(--rule); }
+
+  .rec__row {
+    display: grid;
+    gap: 0.35rem;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  @media (min-width: 48rem) {
+    .rec__row {
+      grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+      gap: 2rem;
+      align-items: baseline;
+    }
+  }
+
+  .rec__row dt {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .rec__row dd { margin: 0; font-size: var(--step-0); }
+</style>

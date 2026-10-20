@@ -1,0 +1,55 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  lede?: string;
+}
+const { eyebrow, title, lede } = Astro.props;
+---
+
+<section class="phero">
+  <div class="wrap phero__inner">
+    <p class="label">{eyebrow}</p>
+    <h1 class="phero__title">{title}</h1>
+    {lede && <p class="phero__lede">{lede}</p>}
+  </div>
+</section>
+
+<style>
+  .phero {
+    padding-block: clamp(3rem, 7vw, 6.5rem) clamp(2.5rem, 5vw, 4.5rem);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .phero__inner {
+    display: grid;
+    gap: 1.75rem;
+  }
+
+  .phero__title {
+    font-size: var(--step-5);
+    max-width: 22ch;
+  }
+
+  .phero__lede {
+    font-size: var(--step-1);
+    line-height: 1.45;
+    letter-spacing: -0.015em;
+    color: var(--ink-2);
+    max-width: 50ch;
+  }
+
+  @media (min-width: 62rem) {
+    .phero__inner {
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      grid-template-areas:
+        'label label'
+        'title lede';
+      align-items: end;
+      gap: 2.5rem 4rem;
+    }
+    .phero .label { grid-area: label; }
+    .phero__title { grid-area: title; }
+    .phero__lede { grid-area: lede; padding-bottom: 0.4rem; }
+  }
+</style>

@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import { nav } from '../data/site';
+---
+
+<Base
+  title="Page not found"
+  description="That page does not exist. Try the main sections of the RB Interiors (Kent) website."
+>
+  <section class="nf">
+    <div class="wrap nf__inner">
+      <p class="label">Error 404</p>
+      <h1 class="nf__title">That page has been stripped out.</h1>
+      <p class="nf__copy">
+        Nothing here. The link may be out of date, or the page may have moved
+        when the site was rebuilt. Try one of these instead.
+      </p>
+      <ul class="nf__links">
+        <li><a href="/">Home</a></li>
+        {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf { padding-block: clamp(4rem, 10vw, 9rem); }
+  .nf__inner { display: grid; gap: 1.5rem; justify-items: start; }
+  .nf__title { font-size: var(--step-4); max-width: 20ch; }
+  .nf__copy { color: var(--ink-2); max-width: 48ch; }
+
+  .nf__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .nf__links a {
+    display: block;
+    padding: 0.55rem 0.9rem;
+    border: 1px solid var(--rule);
+    text-decoration: none;
+    font-family: var(--mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .nf__links a:hover { border-color: var(--accent); color: var(--accent-ink); }
+</style>

@@ -1,0 +1,242 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import CallToAction from '../components/CallToAction.astro';
+import { process } from '../data/site';
+
+const standards = [
+  {
+    title: 'One supervisor, one number',
+    copy: 'Every job has a named supervisor on site. You get their mobile, not a switchboard, and they are the same person on the last day as the first.',
+  },
+  {
+    title: 'Written quotations',
+    copy: 'Broken down by trade, with assumptions and exclusions written in plain English. If something is unknowable before opening up, we say so and price the opening-up.',
+  },
+  {
+    title: 'Variations before the work',
+    copy: 'Anything outside the quotation gets priced and agreed in writing before it is carried out. No one enjoys a final account argument.',
+  },
+  {
+    title: 'A tidy site',
+    copy: 'Swept at the end of every day, waste removed on a schedule rather than when the skip overflows, and dust sealed off from the parts of the building still in use.',
+  },
+  {
+    title: 'Paperwork that exists',
+    copy: 'RAMS before we start, CSCS cards on site, public liability and employers liability certificates on request, and an O&M file at handover.',
+  },
+  {
+    title: 'Snagging closed out',
+    copy: 'We walk the job with you, write the list down, and come back and finish it. The job is done when the list is empty, not when the invoice goes out.',
+  },
+];
+---
+
+<Base
+  title="How we work"
+  description="How RB Interiors (Kent) runs a job — site visit, written quotation, agreed programme, supervised works and a closed-out snag list."
+>
+  <PageHero
+    eyebrow="How we work"
+    title="The boring parts, done properly."
+    lede="Nobody chooses a contractor for their process document. But almost every job that goes wrong goes wrong in the same five places, so here is how we handle them."
+  />
+
+  <section class="section">
+    <div class="wrap">
+      <ol class="flow">
+        {process.map((p) => (
+          <li class="flow__item">
+            <div class="flow__n"><span class="num">{p.n}</span></div>
+            <div class="flow__text">
+              <h2 class="flow__title">{p.title}</h2>
+              <p class="flow__copy">{p.copy}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section ink-panel">
+    <div class="wrap">
+      <div class="std__head">
+        <p class="label">What you can hold us to</p>
+        <h2 class="std__title">Six things that do not change from job to job.</h2>
+      </div>
+
+      <div class="std">
+        {standards.map((s) => (
+          <article class="std__item">
+            <h3 class="std__item-title">{s.title}</h3>
+            <p class="std__item-copy">{s.copy}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section ruled">
+    <div class="wrap faq">
+      <div>
+        <p class="label">Common questions</p>
+        <h2 class="faq__title">Asked often enough to write down.</h2>
+      </div>
+
+      <div class="faq__list">
+        <details class="faq__item">
+          <summary>How quickly can you start?</summary>
+          <p>
+            For small works, usually two to three weeks. Larger programmes are
+            planned months ahead, particularly school work, which books up by
+            the previous spring.
+          </p>
+        </details>
+        <details class="faq__item">
+          <summary>Do you charge for a quotation?</summary>
+          <p>
+            No. A site visit and written quotation are free. If a job needs
+            measured surveys or design input before it can be priced properly,
+            we will tell you that up front and agree a fee for it separately.
+          </p>
+        </details>
+        <details class="faq__item">
+          <summary>Can you work while the building is occupied?</summary>
+          <p>
+            Most of our work is in occupied buildings. It changes the method —
+            dust screens, phasing, out-of-hours operations — and it changes the
+            price, so it is accounted for in the quotation rather than
+            discovered later.
+          </p>
+        </details>
+        <details class="faq__item">
+          <summary>Will I be dealing with subcontractors?</summary>
+          <p>
+            Rarely. The seven trades listed under services are our own people.
+            Specialist packages — lifts, sprinklers, structural steel — are
+            subcontracted, and we manage them.
+          </p>
+        </details>
+        <details class="faq__item">
+          <summary>What about guarantees?</summary>
+          <p>
+            Workmanship is warranted for twelve months from practical
+            completion. Manufacturer warranties on materials and plant are
+            passed through to you in the handover file.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <CallToAction />
+</Base>
+
+<style>
+  .flow { border-top: 1px solid var(--rule); }
+
+  .flow__item {
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+    gap: 1rem;
+    padding: clamp(1.5rem, 3vw, 2.5rem) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  @media (min-width: 60rem) {
+    .flow__item { grid-template-columns: 8rem minmax(0, 1fr); gap: 3rem; }
+  }
+
+  .flow__text {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  @media (min-width: 60rem) {
+    .flow__text {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      gap: 3rem;
+      align-items: baseline;
+    }
+  }
+
+  .flow__title { font-size: var(--step-2); max-width: 18ch; }
+
+  .flow__copy { color: var(--ink-2); max-width: 52ch; }
+
+  .std__head {
+    display: grid;
+    gap: 1.25rem;
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .std__title { font-size: var(--step-3); max-width: 24ch; }
+
+  .std {
+    display: grid;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+
+  @media (min-width: 44rem) { .std { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 70rem) { .std { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+  .std__item {
+    background: var(--ink);
+    padding: clamp(1.5rem, 2.5vw, 2.25rem);
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+  }
+
+  .std__item-title { font-size: var(--step-0); font-weight: 600; }
+  .std__item-copy { font-size: var(--step--1); color: var(--ink-2); line-height: 1.6; }
+
+  .faq { display: grid; gap: clamp(2rem, 4vw, 4rem); align-items: start; }
+
+  @media (min-width: 62rem) {
+    .faq { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); }
+  }
+
+  .faq__title { font-size: var(--step-3); margin-top: 1.25rem; max-width: 20ch; }
+
+  .faq__list { border-top: 1px solid var(--rule); }
+
+  .faq__item { border-bottom: 1px solid var(--rule); }
+
+  .faq__item summary {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.15rem 0;
+    cursor: pointer;
+    font-size: var(--step-1);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    list-style: none;
+  }
+
+  .faq__item summary::-webkit-details-marker { display: none; }
+
+  .faq__item summary::after {
+    content: '+';
+    font-family: var(--mono);
+    font-size: 1.1em;
+    color: var(--accent);
+    flex: none;
+  }
+
+  .faq__item[open] summary::after { content: '–'; }
+  .faq__item summary:hover { color: var(--accent-ink); }
+
+  .faq__item p {
+    margin: 0;
+    padding: 0 0 1.4rem;
+    max-width: 58ch;
+    color: var(--ink-2);
+    font-size: var(--step--1);
+    line-height: 1.65;
+  }
+</style>
