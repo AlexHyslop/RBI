@@ -77,7 +77,7 @@ portrait frame rather than a sliver of the landscape one.
 | --- | --- | --- |
 | `hero.jpg` | homepage hero, landscape | 16:9 |
 | `hero-portrait.jpg` | homepage hero under 48rem | 3:4 |
-| `residential/commercial/educational/industrial.jpg` | sector tiles | 4:3 |
+|  `residential/commercial/educational/leisure/industrial.jpg` | sector tiles | 4:3 |
 | `decorating/refurbishment/bathrooms/partitioning.jpg` | service sections | 3:2 |
 | `band.jpg` | full-width mono band | 21:9, greyscale |
 

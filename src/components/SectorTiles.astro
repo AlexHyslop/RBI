@@ -8,7 +8,7 @@ import { sectors } from '../data/site';
       <img class="tile__img" src={s.photo} alt="" width="1400" height="1050" loading="lazy" />
       <div class="tile__body">
         <h3 class="tile__title">{s.title}</h3>
-        <p class="tile__copy">{s.copy}</p>
+        <div class="tile__reveal"><p class="tile__copy">{s.copy}</p></div>
       </div>
     </li>
   ))}
@@ -20,12 +20,19 @@ import { sectors } from '../data/site';
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
   }
 
+  /* Five sectors divide badly into an even grid, so the odd one out runs
+     wide instead of leaving a hole: 2 + 2 + 1 at tablet, 3 + 2 at desktop.
+     Both rules assume five tiles — revisit them if that number changes. */
   @media (min-width: 46rem) {
     .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .tile:last-child { grid-column: 1 / -1; aspect-ratio: 16 / 6; }
   }
 
   @media (min-width: 86rem) {
-    .tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .tiles { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .tile { grid-column: span 2; }
+    .tile:nth-child(4),
+    .tile:last-child { grid-column: span 3; aspect-ratio: 16 / 7; }
   }
 
   .tile {
@@ -82,19 +89,27 @@ import { sectors } from '../data/site';
     text-shadow: 0 1px 14px rgba(21, 41, 80, 0.55);
   }
 
+  /* Collapsing the copy to zero height rather than just fading it keeps
+     every title on the same baseline, whatever the copy length. */
+  .tile__reveal {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition: grid-template-rows 0.45s var(--ease), opacity 0.35s var(--ease);
+  }
+
+  .tile__reveal > * { overflow: hidden; }
+
+  .tile:hover .tile__reveal,
+  .tile:focus-within .tile__reveal { grid-template-rows: 1fr; opacity: 1; }
+
   .tile__copy {
     margin: 0.75rem 0 0;
-    max-width: 30ch;
+    max-width: 34ch;
     color: var(--white);
     font-size: var(--step--1);
     line-height: 1.55;
-    opacity: 0;
-    translate: 0 0.5rem;
-    transition: opacity 0.4s var(--ease), translate 0.4s var(--ease);
   }
-
-  .tile:hover .tile__copy,
-  .tile:focus-within .tile__copy { opacity: 1; translate: 0 0; }
 
   /* Touch screens have no hover, so show everything up front. */
   @media (hover: none) {
@@ -107,6 +122,6 @@ import { sectors } from '../data/site';
         rgba(21, 41, 80, 0.9) 100%
       );
     }
-    .tile__copy { opacity: 1; translate: 0 0; }
+    .tile__reveal { grid-template-rows: 1fr; opacity: 1; }
   }
 </style>

@@ -3,7 +3,7 @@ export const company = {
   shortName: 'RB Interiors',
   tradingName: 'Richard Baker Interiors',
   tagline:
-    'We provide a comprehensive range of professional building services within the residential, commercial, educational and industrial sectors.',
+    'We provide a comprehensive range of professional building services within the residential, commercial, educational, leisure and industrial sectors.',
   years: "We've Been in Business For Over 20 years",
   area: 'South East England',
   phone: '07946 311813',
@@ -139,6 +139,12 @@ export const sectors: Sector[] = [
     title: 'Educational',
     copy: 'Schools, colleges and nurseries, with the work planned into half terms and holidays.',
     photo: '/photos/educational.jpg',
+  },
+  {
+    slug: 'leisure',
+    title: 'Leisure Centres',
+    copy: 'Pools, sports halls, gyms and changing blocks, refurbished around opening hours and a wet, heavily used environment.',
+    photo: '/photos/leisure.jpg',
   },
   {
     slug: 'industrial',
