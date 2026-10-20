@@ -69,9 +69,14 @@ work.** They are from [Pexels](https://www.pexels.com) under the Pexels licence
 show RBI jobs. Replace the files in place, keeping the same names and roughly
 the same aspect ratios, and nothing else needs touching:
 
+`hero.jpg` and `hero-portrait.jpg` are the exception — they are RBI's own
+photograph of an office floor, cropped two ways so narrow screens get the full
+portrait frame rather than a sliver of the landscape one.
+
 | File | Used for | Aspect |
 | --- | --- | --- |
-| `hero.jpg` | homepage hero | 16:9, wide |
+| `hero.jpg` | homepage hero, landscape | 16:9 |
+| `hero-portrait.jpg` | homepage hero under 48rem | 3:4 |
 | `residential/commercial/educational/industrial.jpg` | sector tiles | 4:3 |
 | `decorating/refurbishment/bathrooms/partitioning.jpg` | service sections | 3:2 |
 | `band.jpg` | full-width mono band | 21:9, greyscale |
